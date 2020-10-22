@@ -78,6 +78,22 @@ bool Controller::checkForSelfCollision(SnakeSegment newHead)
         return lost;
 }
 
+void Controller::displayBoard()
+{
+    for (auto &segment : snakeSegments) 
+    {
+        if (not --segment.ttl) 
+        {
+            DisplayInd l_evt;
+            l_evt.x = segment.x;
+            l_evt.y = segment.y;
+            l_evt.value = Cell_FREE;
+
+            m_displayPort.send(std::make_unique<EventT<DisplayInd>>(l_evt));
+        }
+    }
+}
+
 void Controller::receive(std::unique_ptr<Event> e)
 {
     try 
@@ -111,18 +127,7 @@ void Controller::receive(std::unique_ptr<Event> e)
             } 
             else 
             {
-                for (auto &segment : snakeSegments) 
-                {
-                    if (not --segment.ttl) 
-                    {
-                        DisplayInd l_evt;
-                        l_evt.x = segment.x;
-                        l_evt.y = segment.y;
-                        l_evt.value = Cell_FREE;
-
-                        m_displayPort.send(std::make_unique<EventT<DisplayInd>>(l_evt));
-                    }
-                }
+                displayBoard();
             }
         }
 

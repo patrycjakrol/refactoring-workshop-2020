@@ -49,6 +49,7 @@ public:
 
     void receive(std::unique_ptr<Event> e) override;
     bool checkForSelfCollision(SnakeSegment newHead);
+    void displayBoard();
 };
 
 } // namespace Snake
