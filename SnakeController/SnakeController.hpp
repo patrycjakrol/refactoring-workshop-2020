@@ -32,7 +32,7 @@ public:
     void receive(std::unique_ptr<Event> e) override;
 
 private:
-    struct Segment
+    struct SnakeSegment
     {
         int x;
         int y;
@@ -47,7 +47,7 @@ private:
     std::pair<int, int> m_foodPosition;
 
     Direction m_currentDirection;
-    std::list<Segment> m_segments;
+    std::list<SnakeSegment> snakeSegments;
 };
 
 } // namespace Snake
