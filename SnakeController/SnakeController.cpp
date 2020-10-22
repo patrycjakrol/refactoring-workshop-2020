@@ -63,6 +63,21 @@ Controller::Controller(IPort& p_displayPort, IPort& p_foodPort, IPort& p_scorePo
     }
 }
 
+bool Controller::checkForSelfCollision(SnakeSegment newHead)
+{
+    bool lost = false;
+    for (auto segment : snakeSegments) 
+        {
+            if (segment.x == newHead.x and segment.y == newHead.y) 
+            {
+                m_scorePort.send(std::make_unique<EventT<LooseInd>>());
+                lost = true;
+                break;
+            }
+        }
+        return lost;
+}
+
 void Controller::receive(std::unique_ptr<Event> e)
 {
     try 
@@ -78,15 +93,7 @@ void Controller::receive(std::unique_ptr<Event> e)
 
         bool lost = false;
 
-        for (auto segment : snakeSegments) 
-        {
-            if (segment.x == newHead.x and segment.y == newHead.y) 
-            {
-                m_scorePort.send(std::make_unique<EventT<LooseInd>>());
-                lost = true;
-                break;
-            }
-        }
+        lost = checkForSelfCollision(newHead);
 
         if (not lost) 
         {
